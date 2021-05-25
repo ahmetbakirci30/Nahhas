@@ -1,0 +1,92 @@
+﻿@model IEnumerable<Nahhas.Shared.Entities.Video>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                Video
+            </th>
+            <th>
+                Views
+            </th>
+            <th>
+                Likes
+            </th>
+            <th>
+                Shares
+            </th>
+            <th>
+                Downloads
+            </th>
+            <th>
+                Category
+            </th>
+            <th>
+                Added Date
+            </th>
+            <th>
+                Last Modified
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Active)
+            </th>
+            <th>
+                Options
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    <img src="@item.CoverPath" style="width:64px;height:64px;object-fit:cover;" />
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ViewsCount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LikesCount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SharesCount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DownloadsCount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Category.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AdditionDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastModified)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Active)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,67 @@
+﻿@model VideoViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Video</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="VideoPath" class="control-label"></label>
+                <video controls style="width:256px;height:256px;object-fit:cover;">
+                    <source src="@Model.VideoPath" type="video/mp4">
+                    <p>
+                        Your browser doesn't support HTML5 video. Here is a <a href="@Model.VideoPath">link to the video</a>
+                        instead.
+                    </p>
+                </video>
+            </div>
+            <div class="form-group">
+                <label asp-for="CoverPath" class="control-label"></label>
+                <img src="@Model.CoverPath" style="width:256px;height:256px;object-fit:cover;" />
+            </div>
+            <div class="form-group">
+                <label asp-for="VideoFile" class="control-label"></label>
+                <input asp-for="VideoFile" class="form-control" type="file" accept="video/*" />
+                <span asp-validation-for="VideoFile" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CoverFile" class="control-label"></label>
+                <input asp-for="CoverFile" class="form-control" type="file" accept="image/*" />
+                <span asp-validation-for="CoverFile" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CategoryId" class="control-label"></label>
+                <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.Categories"></select>
+                <span asp-validation-for="CategoryId" class="text-danger"></span>
+            </div>
+            <input asp-for="Id" class="form-control" hidden />
+            <input asp-for="VideoPath" class="form-control" hidden />
+            <input asp-for="CoverPath" class="form-control" hidden />
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Active" />
+                    @Html.DisplayNameFor(model => model.Active)
+                </label>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
