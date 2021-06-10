@@ -44,7 +44,7 @@ namespace Nahhas.Shared.Managers.Files
             if (!Directory.Exists(storagePath))
                 Directory.CreateDirectory(storagePath);
 
-            var fileName = GenerateRandomName(file.FileName);
+            var fileName = GenerateUniqueName(file.FileName);
             var fullPath = Path.Combine(storagePath, fileName);
             using var stream = new FileStream(fullPath, FileMode.Create);
             await file.CopyToAsync(stream);
@@ -53,7 +53,10 @@ namespace Nahhas.Shared.Managers.Files
         }
 
         public async Task<string> Update(IFormFile file, string name)
-            => string.IsNullOrWhiteSpace(await Delete(name)) ? string.Empty : await Upload(file);
+        {
+            await Delete(name);
+            return await Upload(file);
+        }
 
         public async Task<string> Delete(string name)
         {
@@ -74,19 +77,19 @@ namespace Nahhas.Shared.Managers.Files
             return await Task.FromResult(string.Empty);
         }
 
-        private static string GenerateRandomName(string name)
+        private static string GenerateUniqueName(string fileName)
         {
-            DateTime _currentDateTime = DateTime.Now;
+            var currentDateTime = DateTime.Now;
+            var uniqueName = Guid.NewGuid().ToString("N") + Path.GetExtension(fileName);
 
-            return string.Join("-", Guid.NewGuid().ToString(),
-                                    _currentDateTime.Year,
-                                    _currentDateTime.Month,
-                                    _currentDateTime.Day,
-                                    _currentDateTime.Hour,
-                                    _currentDateTime.Minute,
-                                    _currentDateTime.Second,
-                                    _currentDateTime.Millisecond,
-                                    name);
+            return string.Join("-", currentDateTime.Year,
+                                    currentDateTime.Month,
+                                    currentDateTime.Day,
+                                    currentDateTime.Hour,
+                                    currentDateTime.Minute,
+                                    currentDateTime.Second,
+                                    currentDateTime.Millisecond,
+                                    uniqueName);
         }
     }
 }

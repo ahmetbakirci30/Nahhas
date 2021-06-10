@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Nahhas.Shared.Entities.Video>
+﻿@model IEnumerable<Video>
 
 @{
     ViewData["Title"] = "Index";
@@ -40,7 +40,7 @@
                 Last Modified
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Active)
+                Active
             </th>
             <th>
                 Options
@@ -48,43 +48,43 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @foreach (var video in Model)
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Title)
+                    @Html.DisplayFor(modelItem => video.Title)
                 </td>
                 <td>
-                    <img src="@item.CoverPath" style="width:64px;height:64px;object-fit:cover;" />
+                    <img src="@video.CoverPath" style="width:64px;height:64px;object-fit:cover;" />
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.ViewsCount)
+                    @Html.DisplayFor(modelItem => video.ViewsCount)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.LikesCount)
+                    @Html.DisplayFor(modelItem => video.LikesCount)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.SharesCount)
+                    @Html.DisplayFor(modelItem => video.SharesCount)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.DownloadsCount)
+                    @Html.DisplayFor(modelItem => video.DownloadsCount)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Category.Name)
+                    @Html.DisplayFor(modelItem => video.Category.Name)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.AdditionDate)
+                    @Html.DisplayFor(modelItem => video.AdditionDate)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.LastModified)
+                    @Html.DisplayFor(modelItem => video.LastModified)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Active)
+                    @Html.DisplayFor(modelItem => video.Active)
                 </td>
                 <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                    @Html.ActionLink("Edit", "Edit", new { id = video.Id }) |
+                    @Html.ActionLink("Details", "Details", new { id = video.Id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = video.Id })
                 </td>
             </tr>
         }

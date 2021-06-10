@@ -4,6 +4,7 @@ using Nahhas.Shared.Helpers.Extensions.FormFile;
 using Nahhas.Shared.Managers.Files.Interfaces;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
+using System.Net.Mime;
 using System.Threading.Tasks;
 
 namespace Nahhas.API.Controllers
@@ -28,7 +29,7 @@ namespace Nahhas.API.Controllers
                 var file = await _fileManager.Download(name);
 
                 return (file != null && file.Length > 0) ?
-                    File(file, "application/octet-stream", name) :
+                    File(file, MediaTypeNames.Application.Octet, name) :
                     NotFound($"File named {name} not found!");
             }
             catch
@@ -109,7 +110,8 @@ namespace Nahhas.API.Controllers
                              Request.Scheme,
                              Request.Host,
                              Request.PathBase,
-                             "statuses", file.IsImage() ? "images" : "videos",
+                             "statuses",
+                             file.IsImage() ? "images" : "videos",
                              fileName);
     }
 }

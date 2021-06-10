@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nahhas.Shared.Entities;
 using Nahhas.Shared.Repositories;
@@ -19,7 +18,6 @@ namespace Nahhas.Web.Controllers
             _nahhas = nahhas;
         }
 
-        // GET: DashboardController
         public async Task<ActionResult> Index()
         {
             var videos = await _nahhas.VideoRepository.Get();
@@ -31,7 +29,6 @@ namespace Nahhas.Web.Controllers
             return View(videos);
         }
 
-        // GET: DashboardController/Details/5
         public async Task<ActionResult> Details(Guid id)
         {
             var video = await _nahhas.VideoRepository.Get(id);
@@ -40,7 +37,6 @@ namespace Nahhas.Web.Controllers
             return View(video);
         }
 
-        // GET: DashboardController/Create
         public async Task<ActionResult> Create()
         {
             var categories = await _nahhas.CategoryRepository.Get();
@@ -48,7 +44,6 @@ namespace Nahhas.Web.Controllers
             return View();
         }
 
-        // POST: DashboardController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(VideoViewModel model)
@@ -70,7 +65,7 @@ namespace Nahhas.Web.Controllers
                     CoverPath = imagePath
                 };
 
-                await new NahhasRepositories().VideoRepository.Add(video);
+                await _nahhas.VideoRepository.Add(video);
 
                 return RedirectToAction(nameof(Index));
             }
@@ -80,11 +75,9 @@ namespace Nahhas.Web.Controllers
             }
         }
 
-        // GET: DashboardController/Edit/5
         public async Task<ActionResult> Edit(Guid id)
         {
-            var video = await new NahhasRepositories().VideoRepository.Get(id);
-
+            var video = await _nahhas.VideoRepository.Get(id);
             var categories = await _nahhas.CategoryRepository.Get();
             ViewBag.Categories = new SelectList(categories, "Id", "Name");
 
@@ -99,15 +92,17 @@ namespace Nahhas.Web.Controllers
             });
         }
 
-        // POST: DashboardController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(Guid id, VideoViewModel model)
         {
             try
             {
-                var videoPath = (model.VideoFile != null) ? await _nahhas.FileRepository.Add(model.VideoFile) : string.Empty;
-                var coverPath = (model.CoverFile != null) ? await _nahhas.FileRepository.Add(model.CoverFile) : string.Empty;
+                var videoPath = (model.VideoFile != null && model.VideoFile.Length > 0) ?
+                    await _nahhas.FileRepository.Update(model.VideoFile, model.VideoPath) : model.VideoPath;
+
+                var coverPath = (model.CoverFile != null && model.CoverFile.Length > 0) ?
+                    await _nahhas.FileRepository.Update(model.CoverFile, model.CoverPath) : model.CoverPath;
 
                 var video = new Video
                 {
@@ -115,11 +110,11 @@ namespace Nahhas.Web.Controllers
                     Active = model.Active,
                     CategoryId = model.CategoryId,
                     Title = model.Title,
-                    VideoPath = string.IsNullOrWhiteSpace(videoPath) ? model.VideoPath : videoPath,
-                    CoverPath = string.IsNullOrWhiteSpace(coverPath) ? model.CoverPath : coverPath
+                    VideoPath = videoPath,
+                    CoverPath = coverPath
                 };
 
-                await new NahhasRepositories().VideoRepository.Update(video);
+                await _nahhas.VideoRepository.Update(video);
 
                 return RedirectToAction(nameof(Index));
             }
@@ -129,26 +124,24 @@ namespace Nahhas.Web.Controllers
             }
         }
 
-        // GET: DashboardController/Delete/5
         public async Task<ActionResult> Delete(Guid id)
-        {
-            return View(await new NahhasRepositories().VideoRepository.Get(id));
-        }
+            => View(await _nahhas.VideoRepository.Get(id));
 
-        // POST: DashboardController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Delete(Guid id, IFormCollection collection)
+        public async Task<ActionResult> Delete(Guid id, Video video)
         {
             try
             {
-                await new NahhasRepositories().VideoRepository.Delete(id);
+                await _nahhas.FileRepository.Delete(video.VideoPath);
+                await _nahhas.FileRepository.Delete(video.CoverPath);
+                await _nahhas.VideoRepository.Delete(id);
 
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                return RedirectToAction(nameof(Delete));
             }
         }
     }

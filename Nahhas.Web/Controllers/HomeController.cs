@@ -1,12 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Nahhas.Shared.Repositories;
 using Nahhas.Web.Models;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
 
@@ -24,34 +20,27 @@ namespace Nahhas.Web.Controllers
         }
 
         public async Task<IActionResult> Index()
-        {
-            return View(new NahhasStatuses
+            => View(new NahhasStatuses
             {
                 Videos = await _nahhas.VideoRepository.Get(),
                 Images = await _nahhas.ImageRepository.Get(),
-                Quotes = await _nahhas.QuoteRepository.Get()
+                Quotes = await _nahhas.QuoteRepository.Get(),
+
+                TotalStatusesCount = (await _nahhas.VideoRepository.Count()) + (await _nahhas.ImageRepository.Count()) + (await _nahhas.QuoteRepository.Count())
             });
-        }
 
         public async Task<IActionResult> Download(string path)
-        {
-            var status = await fileRepository.Get(path);
-            return File(status, MediaTypeNames.Application.Octet, Path.GetFileName(path));
-           // return RedirectToAction(nameof(Index));
-        }
+            => File(await fileRepository.Get(path),
+                MediaTypeNames.Application.Octet, Path.GetFileName(path));
 
         public IActionResult Privacy()
-        {
-            return View();
-        }
+            => View();
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
-        {
-            return View(new ErrorViewModel
+            => View(new ErrorViewModel
             {
                 RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
             });
-        }
     }
 }

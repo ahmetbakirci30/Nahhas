@@ -15,6 +15,8 @@ namespace Nahhas.Web.Models
 
         [Required]
         public IFormFile VideoFile { get; set; }
+
+        [Required]
         public IFormFile CoverFile { get; set; }
 
         public string VideoPath { get; set; }

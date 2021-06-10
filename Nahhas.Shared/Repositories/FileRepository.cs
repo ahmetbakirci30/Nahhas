@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Http;
-using System;
-using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -9,49 +7,55 @@ namespace Nahhas.Shared.Repositories
 {
     public class FileRepository
     {
-        private static readonly HttpClient http = new();
-        private static readonly string url = "https://localhost:44308/api/files";
+        private readonly HttpClient http;
+        private readonly string url;
+
+        public FileRepository()
+        {
+            http = new HttpClient();
+            url = "https://localhost:44308/api/files";
+        }
 
         public async Task<byte[]> Get(string path)
         {
             http.DefaultRequestHeaders.Add("path", path);
-            using var response = await http.GetStreamAsync(url);
-            //var result = await response.Content.ReadAsAsync<FileStream>();
-
-            using var stream = new MemoryStream();
-            response.CopyTo(stream);
-            
-            return stream.ToArray();
+            return await http.GetByteArrayAsync(url);
         }
 
         public async Task<string> Add(IFormFile file)
         {
-            using var content = new MultipartFormDataContent
-            {
-                {
-                    new StreamContent(file.OpenReadStream())
-                    {
-                        Headers =
-                        {
-                            ContentLength = file.Length,
-                            ContentType = new MediaTypeHeaderValue(file.ContentType)
-                        }
-                    }, "File", file.FileName
-                }
-            };
-
-            using var response = await http.PostAsync(url, content);
+            using var response = await http.PostAsync(url, CofigureFileToSend(file));
             return await response.Content.ReadAsStringAsync();
         }
 
-        public Task<IFormFile> Update(IFormFile entity, string path)
+        public async Task<string> Update(IFormFile file, string path)
         {
-            throw new NotImplementedException();
+            http.DefaultRequestHeaders.Add("path", path);
+            using var response = await http.PutAsync(url, CofigureFileToSend(file));
+            return await response.Content.ReadAsStringAsync();
         }
 
-        public Task<IFormFile> Delete(string path)
+        public async Task<string> Delete(string path)
         {
-            throw new NotImplementedException();
+            http.DefaultRequestHeaders.Add("path", path);
+            using var response = await http.DeleteAsync(url);
+            return await response.Content.ReadAsStringAsync();
         }
+
+        private static MultipartFormDataContent CofigureFileToSend(IFormFile file) => new()
+        {
+            {
+                new StreamContent(file.OpenReadStream())
+                {
+                    Headers =
+                    {
+                        ContentLength = file.Length,
+                        ContentType = new MediaTypeHeaderValue(file.ContentType)
+                    }
+                },
+                "File",
+                file.FileName
+            }
+        };
     }
 }

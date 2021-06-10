@@ -5,10 +5,10 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
+    <h1 class="display-4">Welcome Total Statuses Count : @Model.TotalStatusesCount</h1>
 </div>
 
-<div class="container-fluid">
+<div class="m-5">
 
     <h2>Videos</h2>
 
@@ -21,7 +21,9 @@
                     <a href="@video.VideoPath">
                         <img src="@video.CoverPath" class="rounded-3 col-12" alt="Image uploading error!" style="height: 256px; object-fit: cover;">
                     </a>
-                    @Html.ActionLink("Download", "Download", new { path = video.VideoPath }, new { @class = "btn btn-primary col-12 mt-2" })
+                    <div class="ml-2 mr-2">
+                        @Html.ActionLink("Download", "Download", new { path = video.VideoPath }, new { @class = "btn btn-primary col-12 mt-2" })
+                    </div>
                 </div>
             </div>
         }
@@ -37,7 +39,9 @@
                     <a href="@image.ImagePath">
                         <img src="@image.ImagePath" class="rounded-3 col-12" alt="Image uploading error!" style="height: 256px; object-fit: cover;">
                     </a>
-                    <button class="btn btn-primary col-12 mt-2">Download</button>
+                    <div class="ml-2 mr-2">
+                        @Html.ActionLink("Download", "Download", new { path = image.ImagePath }, new { @class = "btn btn-primary col-12 mt-2" })
+                    </div>
                 </div>
             </div>
         }
@@ -56,10 +60,22 @@
                         </blockquote>
                     </div>
                     <div class="card-footer bg-transparent border-0">
-                        <button class="btn btn-primary col-12">Copy</button>
+                        <button onclick="copy('@quote.Content')" class="btn btn-primary col-12">Copy</button>
                     </div>
                 </div>
             </div>
         }
     </div>
 </div>
+
+<script>
+    function copy(text) {
+        var input = document.createElement('input');
+        input.setAttribute('value', text);
+        document.body.appendChild(input);
+        input.select();
+        document.execCommand('copy');
+        document.body.removeChild(input);
+        alert("Copied the text: " + text);
+    }
+</script>
