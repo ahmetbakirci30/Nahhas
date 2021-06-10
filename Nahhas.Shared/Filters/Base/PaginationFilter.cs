@@ -1,8 +1,10 @@
-﻿using System.Linq;
+﻿using Nahhas.Shared.Entities.Base;
+using Nahhas.Shared.Filters.Interfaces;
+using System.Linq;
 
 namespace Nahhas.Shared.Filters.Base
 {
-    public abstract class PaginationFilter<T> where T : class
+    public abstract class PaginationFilter<T> : IPaginationFilter<T> where T : EntityBase
     {
         private int _pageNumber = 1;
         private int _pageSize = 9;

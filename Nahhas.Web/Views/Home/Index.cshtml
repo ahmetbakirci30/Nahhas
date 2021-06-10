@@ -21,7 +21,7 @@
                     <a href="@video.VideoPath">
                         <img src="@video.CoverPath" class="rounded-3 col-12" alt="Image uploading error!" style="height: 256px; object-fit: cover;">
                     </a>
-                    <button class="btn btn-primary col-12 mt-2">Download</button>
+                    @Html.ActionLink("Download", "Download", new { path = video.VideoPath }, new { @class = "btn btn-primary col-12 mt-2" })
                 </div>
             </div>
         }

@@ -25,6 +25,7 @@ namespace Nahhas.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped(typeof(NahhasRepositories));
+            services.AddScoped(typeof(FileRepository));
 
             services.AddControllersWithViews();
         }

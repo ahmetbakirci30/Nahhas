@@ -1,13 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Nahhas.Shared.Filters.Interfaces;
-using Nahhas.Shared.Repositories.Interfaces;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Nahhas.Shared.Repositories
@@ -19,7 +14,14 @@ namespace Nahhas.Shared.Repositories
 
         public async Task<byte[]> Get(string path)
         {
-            return await http.GetByteArrayAsync(url);
+            http.DefaultRequestHeaders.Add("path", path);
+            using var response = await http.GetStreamAsync(url);
+            //var result = await response.Content.ReadAsAsync<FileStream>();
+
+            using var stream = new MemoryStream();
+            response.CopyTo(stream);
+            
+            return stream.ToArray();
         }
 
         public async Task<string> Add(IFormFile file)

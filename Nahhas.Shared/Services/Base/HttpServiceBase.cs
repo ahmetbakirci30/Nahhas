@@ -1,14 +1,19 @@
-﻿using Nahhas.Shared.Services.Interfaces;
+﻿using Nahhas.Shared.Entities.Base;
+using Nahhas.Shared.Services.Interfaces;
 using System.Net.Http;
 
 namespace Nahhas.Shared.Services.Base
 {
-    public class HttpServiceBase<T> : IHttpService<T> where T : class
+    public class HttpServiceBase<T> : IHttpService<T> where T : EntityBase, new()
     {
-        private static HttpClient _client;
-        private static readonly string baseUrl = "https://localhost:44308/api/";
+        private readonly string _baseUrl;
 
-        public HttpClient Client => _client ??= new HttpClient();
+        public HttpServiceBase()
+        {
+            _baseUrl = "https://localhost:44308/api/";
+        }
+
+        public HttpClient Client => new();
 
         public string Path
         {
@@ -18,7 +23,7 @@ namespace Nahhas.Shared.Services.Base
 
                 name = name.EndsWith('y') ? $"{name[0..^1]}ie" : name;
 
-                return $"{baseUrl}{name}s/";
+                return $"{_baseUrl}{name}s/";
             }
         }
     }

@@ -15,7 +15,7 @@ namespace Nahhas.Shared.Filters.Base
 
         public virtual IQueryable<T> Build(IQueryable<T> data, bool applyPagination = true)
         {
-            data = (Id.HasValue && Id != Guid.Empty) ?
+            data = (Id.HasValue && !Id.Equals(Guid.Empty)) ?
                 data.Where(d => d.Id == Id) : data;
 
             data = (AdditionDate.HasValue && AdditionDate.Value > DateTime.MinValue && AdditionDate.Value < DateTime.MaxValue) ?

@@ -9,7 +9,7 @@ namespace Nahhas.Shared
 {
     public class NahhasDbContext : DbContext
     {
-        public NahhasDbContext(DbContextOptions<NahhasDbContext> options) : base(options) { }
+        public NahhasDbContext(DbContextOptions options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -17,10 +17,10 @@ namespace Nahhas.Shared
             {
                 var id = Guid.NewGuid();
 
-                modelBuilder.Entity<Category>().HasData(new Category { Id = id, Name = "Aşk" + i + i });
-                modelBuilder.Entity<Video>().HasData(new Video { Id = Guid.NewGuid(), CategoryId = id, Title = "Aşk" + i, VideoPath = "https://localhost:44308/statuses/videos/a.mp4", CoverPath = "https://localhost:44308/statuses/images/a.png" });
+                modelBuilder.Entity<Category>().HasData(new Category { Id = id, Name = $"Aşk{i}" });
+                modelBuilder.Entity<Video>().HasData(new Video { Id = Guid.NewGuid(), CategoryId = id, Title = $"Sevgililer{i}", VideoPath = "https://localhost:44308/statuses/videos/a.mp4", CoverPath = "https://localhost:44308/statuses/images/a.png" });
                 modelBuilder.Entity<Image>().HasData(new Image { Id = Guid.NewGuid(), CategoryId = id, ImagePath = "https://localhost:44308/statuses/images/a.png" });
-                modelBuilder.Entity<Quote>().HasData(new Quote { Id = Guid.NewGuid(), CategoryId = id, Content = "My " + i + ". Status." });
+                modelBuilder.Entity<Quote>().HasData(new Quote { Id = Guid.NewGuid(), CategoryId = id, Content = $"My {i}th Status." });
             }
         }
 

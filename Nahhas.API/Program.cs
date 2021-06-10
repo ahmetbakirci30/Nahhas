@@ -1,8 +1,5 @@
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Nahhas.Shared;
 
 namespace Nahhas.API
 {
@@ -10,9 +7,7 @@ namespace Nahhas.API
     {
         public static void Main(string[] args)
         {
-            var host = CreateHostBuilder(args).Build();
-            UpdateDatabase(host);
-            host.Run();
+            CreateHostBuilder(args).Build().Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
@@ -21,11 +16,5 @@ namespace Nahhas.API
                 {
                     webBuilder.UseStartup<Startup>();
                 });
-
-        private static void UpdateDatabase(IHost host)
-        {
-            using var scope = host.Services.CreateScope();
-            scope.ServiceProvider.GetRequiredService<NahhasDbContext>().Database.Migrate();
-        }
     }
 }

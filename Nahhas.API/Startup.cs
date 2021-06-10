@@ -1,14 +1,9 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Nahhas.Shared;
-using Nahhas.Shared.Managers.Files;
-using Nahhas.Shared.Managers.Files.Interfaces;
-using Nahhas.Shared.Repositories.Base;
-using Nahhas.Shared.Repositories.Interfaces;
+using Nahhas.Shared.Helpers.Extensions.Startup;
 
 namespace Nahhas.API
 {
@@ -23,12 +18,7 @@ namespace Nahhas.API
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<NahhasDbContext>(options =>
-                options.UseSqlServer(_configuration.GetConnectionString("DefaultConnection")));
-
-            services.AddScoped(typeof(IRepository<>), typeof(RepositoryBase<>));
-            services.AddScoped(typeof(IFileManager), typeof(FileManager));
-
+            services.AddRequiredServices(_configuration);
             services.AddControllers();
         }
 
@@ -39,12 +29,14 @@ namespace Nahhas.API
 
             app.UseRouting();
 
-            app.UseStaticFiles();
+            app.UseFileServer();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
+
+            app.SeedDataAsync().Wait();
         }
     }
 }

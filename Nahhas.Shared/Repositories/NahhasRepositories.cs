@@ -4,10 +4,10 @@ namespace Nahhas.Shared.Repositories
 {
     public class NahhasRepositories
     {
-        public Repository<Category> CategoryRepository { get => new(); }
-        public Repository<Video> VideoRepository { get => new(); }
-        public Repository<Image> ImageRepository { get => new(); }
-        public Repository<Quote> QuoteRepository { get => new(); }
+        public ApiRepository<Category> CategoryRepository { get => new(); }
+        public ApiRepository<Video> VideoRepository { get => new(); }
+        public ApiRepository<Image> ImageRepository { get => new(); }
+        public ApiRepository<Quote> QuoteRepository { get => new(); }
         public FileRepository FileRepository { get => new(); }
     }
 }
