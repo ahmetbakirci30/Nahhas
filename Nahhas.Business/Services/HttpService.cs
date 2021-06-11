@@ -10,7 +10,7 @@ namespace Nahhas.Business.Services
         {
             _client = new HttpClient
             {
-                BaseAddress = new Uri("https://localhost:44308/api/")
+                BaseAddress = new Uri("https://nahhasapi20210611231706.azurewebsites.net/api/")
             };
         }
 

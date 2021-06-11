@@ -9,5 +9,6 @@ namespace Nahhas.Business.Entities.Base
         public decimal SharesCount { get; set; }
         public decimal DownloadsCount { get; set; }
         public Guid CategoryId { get; set; }
+        public Category Category { get; set; }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Nahhas.Shared.Repositories;
+using Nahhas.Business.Repositories.Interfaces;
 using Nahhas.Web.Models;
 using System.Diagnostics;
 using System.IO;
@@ -10,13 +10,11 @@ namespace Nahhas.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly NahhasRepositories _nahhas;
-        private readonly FileRepository fileRepository;
+        private readonly INahhasRepositories _nahhas;
 
-        public HomeController(NahhasRepositories nahhas, FileRepository fileRepository)
+        public HomeController(INahhasRepositories nahhas)
         {
             _nahhas = nahhas;
-            this.fileRepository = fileRepository;
         }
 
         public async Task<IActionResult> Index()
@@ -30,7 +28,7 @@ namespace Nahhas.Web.Controllers
             });
 
         public async Task<IActionResult> Download(string path)
-            => File(await fileRepository.Get(path),
+            => File(await _nahhas.FileRepository.Get(path),
                 MediaTypeNames.Application.Octet, Path.GetFileName(path));
 
         public IActionResult Privacy()

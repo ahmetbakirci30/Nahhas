@@ -8,6 +8,6 @@ namespace Nahhas.Business.Repositories.Interfaces
         IRepository<Video> VideoRepository { get; }
         IRepository<Image> ImageRepository { get; }
         IRepository<Quote> QuoteRepository { get; }
-        IRepository<FormFile> FileRepository { get; }
+        FileRepository FileRepository { get; }
     }
 }

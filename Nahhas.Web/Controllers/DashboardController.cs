@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nahhas.Shared.Entities;
-using Nahhas.Shared.Repositories;
+using Nahhas.Business.Entities;
+using Nahhas.Business.Repositories;
+using Nahhas.Business.Repositories.Interfaces;
 using Nahhas.Web.Models;
 using System;
 using System.Linq;
@@ -11,9 +12,9 @@ namespace Nahhas.Web.Controllers
 {
     public class DashboardController : Controller
     {
-        private readonly NahhasRepositories _nahhas;
+        private readonly INahhasRepositories _nahhas;
 
-        public DashboardController(NahhasRepositories nahhas)
+        public DashboardController(INahhasRepositories nahhas)
         {
             _nahhas = nahhas;
         }

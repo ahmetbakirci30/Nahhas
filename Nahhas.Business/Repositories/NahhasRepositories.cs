@@ -18,6 +18,6 @@ namespace Nahhas.Business.Repositories
         public IRepository<Video> VideoRepository => new Repository<Video>(_service, "videos");
         public IRepository<Image> ImageRepository => new Repository<Image>(_service, "images");
         public IRepository<Quote> QuoteRepository => new Repository<Quote>(_service, "quotes");
-        public IRepository<FormFile> FileRepository => new Repository<FormFile>(_service, "files");
+        public FileRepository FileRepository => new FileRepository(_service, "files");
     }
 }

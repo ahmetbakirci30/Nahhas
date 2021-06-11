@@ -1,4 +1,4 @@
-﻿using Nahhas.Shared.Entities;
+﻿using Nahhas.Business.Entities;
 using System.Collections.Generic;
 
 namespace Nahhas.Web.Models
