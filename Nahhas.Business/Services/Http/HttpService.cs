@@ -1,11 +1,13 @@
-﻿using Nahhas.Business.Services.Interfaces;
+﻿using Nahhas.Business.Services.Http.Interfaces;
 using System;
 using System.Net.Http;
 
-namespace Nahhas.Business.Services
+namespace Nahhas.Business.Services.Http
 {
     public class HttpService : IHttpService
     {
+        private static readonly HttpClient _client;
+
         static HttpService()
         {
             _client = new HttpClient
@@ -13,8 +15,6 @@ namespace Nahhas.Business.Services
                 BaseAddress = new Uri("https://nahhasapi20210611231706.azurewebsites.net/api/")
             };
         }
-
-        private static readonly HttpClient _client;
 
         public HttpClient Client => _client;
     }

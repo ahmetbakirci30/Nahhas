@@ -5,7 +5,6 @@ using Android.Runtime;
 using Android.Widget;
 using AndroidX.AppCompat.App;
 using Nahhas.Business.Repositories;
-using System.Linq;
 using Xamarin.Essentials;
 
 namespace Nahhas.Android
@@ -25,9 +24,10 @@ namespace Nahhas.Android
         private async void Init()
         {
             var nahhas = new NahhasRepositories();
-            var videos = (await nahhas.VideoRepository.Get()).ToList();
+            var quotes = await nahhas.QuoteRepository.Get();
 
-            Toast.MakeText(this, videos[0].Title, ToastLength.Short).Show();
+            foreach (var quote in quotes)
+                Toast.MakeText(this, quote.Content, ToastLength.Short).Show();
         }
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Permission[] grantResults)

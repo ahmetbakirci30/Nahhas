@@ -1,7 +1,11 @@
 ﻿using Nahhas.Business.Entities;
 using Nahhas.Business.Repositories.Interfaces;
-using Nahhas.Business.Services;
-using Nahhas.Business.Services.Interfaces;
+using Nahhas.Business.Services.File;
+using Nahhas.Business.Services.File.Interfaces;
+using Nahhas.Business.Services.Http;
+using Nahhas.Business.Services.Http.Interfaces;
+using Nahhas.Business.Services.Nahhas;
+using Nahhas.Business.Services.Nahhas.Interfaces;
 
 namespace Nahhas.Business.Repositories
 {
@@ -14,10 +18,10 @@ namespace Nahhas.Business.Repositories
             _service = new HttpService();
         }
 
-        public IRepository<Category> CategoryRepository => new Repository<Category>(_service, "categories");
-        public IRepository<Video> VideoRepository => new Repository<Video>(_service, "videos");
-        public IRepository<Image> ImageRepository => new Repository<Image>(_service, "images");
-        public IRepository<Quote> QuoteRepository => new Repository<Quote>(_service, "quotes");
-        public FileRepository FileRepository => new FileRepository(_service, "files");
+        public INahhasService<Category> CategoryRepository => new NahhasService<Category>(_service, "categories");
+        public INahhasService<Video> VideoRepository => new NahhasService<Video>(_service, "videos");
+        public INahhasService<Image> ImageRepository => new NahhasService<Image>(_service, "images");
+        public INahhasService<Quote> QuoteRepository => new NahhasService<Quote>(_service, "quotes");
+        public IFileService FileRepository => new FileService(_service, "files");
     }
 }
