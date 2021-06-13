@@ -21,7 +21,7 @@ namespace Nahhas.API.Controllers.Files
         }
 
         [HttpGet]
-        public async Task<ActionResult> Download([Required][FromHeader] string path)
+        public async Task<ActionResult> DownloadAsync([Required][FromHeader] string path)
         {
             try
             {
@@ -40,7 +40,7 @@ namespace Nahhas.API.Controllers.Files
         }
 
         [HttpPost]
-        public async Task<ActionResult<string>> Upload([Required][FromForm] IFormFile file)
+        public async Task<ActionResult<string>> UploadAsync([Required][FromForm] IFormFile file)
         {
             try
             {
@@ -48,7 +48,7 @@ namespace Nahhas.API.Controllers.Files
                 {
                     string fullPath = GetUploadedFilePath(file, await _fileManager.UploadAsync(file));
 
-                    return CreatedAtAction(nameof(Download), new { path = fullPath }, fullPath);
+                    return CreatedAtAction(nameof(DownloadAsync), new { path = fullPath }, fullPath);
                 }
 
                 return BadRequest("File is required!");
@@ -61,7 +61,7 @@ namespace Nahhas.API.Controllers.Files
         }
 
         [HttpPut]
-        public async Task<ActionResult<string>> Update([Required][FromHeader] string path,
+        public async Task<ActionResult<string>> UpdateAsync([Required][FromHeader] string path,
             [Required][FromForm] IFormFile file)
         {
             try
@@ -78,7 +78,7 @@ namespace Nahhas.API.Controllers.Files
         }
 
         [HttpDelete]
-        public async Task<ActionResult<string>> Delete([Required][FromHeader] string path)
+        public async Task<ActionResult<string>> DeleteAsync([Required][FromHeader] string path)
         {
             try
             {

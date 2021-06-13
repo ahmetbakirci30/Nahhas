@@ -23,7 +23,7 @@ namespace Nahhas.API.Controllers.Base
         }
 
         [HttpGet]
-        public virtual async Task<ActionResult<IEnumerable<TEntity>>> Get()
+        public virtual async Task<ActionResult<IEnumerable<TEntity>>> GetAsync()
         {
             try
             {
@@ -37,7 +37,7 @@ namespace Nahhas.API.Controllers.Base
         }
 
         [HttpGet("search")]
-        public virtual async Task<ActionResult<IEnumerable<TEntity>>> Get([FromQuery] Filter filter)
+        public virtual async Task<ActionResult<IEnumerable<TEntity>>> GetAsync([FromQuery] Filter filter)
         {
             try
             {
@@ -51,7 +51,7 @@ namespace Nahhas.API.Controllers.Base
         }
 
         [HttpGet("{id:Guid}")]
-        public virtual async Task<ActionResult<TEntity>> Get([FromRoute] Guid id)
+        public virtual async Task<ActionResult<TEntity>> GetAsync([FromRoute] Guid id)
         {
             try
             {
@@ -68,7 +68,7 @@ namespace Nahhas.API.Controllers.Base
         }
 
         [HttpGet("count")]
-        public virtual async Task<ActionResult<decimal>> Count([FromQuery] Filter filter)
+        public virtual async Task<ActionResult<decimal>> CountAsync([FromQuery] Filter filter)
         {
             try
             {
@@ -82,13 +82,13 @@ namespace Nahhas.API.Controllers.Base
         }
 
         [HttpPost]
-        public virtual async Task<ActionResult<TEntity>> Post([FromBody] TEntity entity)
+        public virtual async Task<ActionResult<TEntity>> PostAsync([FromBody] TEntity entity)
         {
             try
             {
                 var added = await _repository.AddAsync(entity);
 
-                return CreatedAtAction(nameof(Get), new { id = added.Id }, added);
+                return CreatedAtAction(nameof(GetAsync), new { id = added.Id }, added);
             }
             catch
             {
@@ -98,13 +98,11 @@ namespace Nahhas.API.Controllers.Base
         }
 
         [HttpPut]
-        public virtual async Task<ActionResult<TEntity>> Put([FromBody] TEntity entity)
+        public virtual async Task<ActionResult<TEntity>> PutAsync([FromBody] TEntity entity)
         {
             try
             {
-                return entity.Id.Equals(Guid.Empty) ?
-                    BadRequest("The Id field is required for the update process!") :
-                    Ok(await _repository.UpdateAsync(entity));
+                return Ok(await _repository.UpdateAsync(entity));
             }
             catch
             {
@@ -116,13 +114,11 @@ namespace Nahhas.API.Controllers.Base
         }
 
         [HttpDelete("{id:Guid}")]
-        public virtual async Task<ActionResult<TEntity>> Delete([FromRoute] Guid id)
+        public virtual async Task<ActionResult<TEntity>> DeleteAsync([FromRoute] Guid id)
         {
             try
             {
-                return id.Equals(Guid.Empty) ?
-                   BadRequest("The Id field is required for the delete process!") :
-                   Ok(await _repository.DeleteAsync(id));
+                return Ok(await _repository.DeleteAsync(id));
             }
             catch
             {
