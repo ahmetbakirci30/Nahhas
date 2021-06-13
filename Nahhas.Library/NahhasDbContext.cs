@@ -18,10 +18,10 @@ namespace Nahhas.Library
             {
                 var id = Guid.NewGuid();
 
-                modelBuilder.Entity<Category>().HasData(new Category { Id = id, Name = $"Aşk{i}", CoverPath = "https://localhost:44308/statuses/images/a.png", AdditionDate = DateTime.UtcNow, LastModified = DateTime.UtcNow });
-                modelBuilder.Entity<Video>().HasData(new Video { Id = Guid.NewGuid(), CategoryId = id, Title = $"Sevgililer{i}", VideoPath = "https://localhost:44308/statuses/videos/a.mp4", CoverPath = "https://localhost:44308/statuses/images/a.png", AdditionDate = DateTime.UtcNow, LastModified = DateTime.UtcNow });
-                modelBuilder.Entity<Image>().HasData(new Image { Id = Guid.NewGuid(), CategoryId = id, ImagePath = "https://localhost:44308/statuses/images/a.png", AdditionDate = DateTime.UtcNow, LastModified = DateTime.UtcNow });
-                modelBuilder.Entity<Quote>().HasData(new Quote { Id = Guid.NewGuid(), CategoryId = id, Content = $"My {i}th Status.", AdditionDate = DateTime.UtcNow, LastModified = DateTime.UtcNow });
+                modelBuilder.Entity<Category>().HasData(new Category { Id = id, Name = $"{i}th Love", CoverPath = "https://nahhasapi20210611231706.azurewebsites.net/statuses/images/2021-6-11-21-5-20-31-14542525338141bbbf215cecf7561b11.png", AdditionDate = DateTime.UtcNow, LastModified = DateTime.UtcNow });
+                modelBuilder.Entity<Video>().HasData(new Video { Id = Guid.NewGuid(), CategoryId = id, Title = $"{i}th Video", VideoPath = "https://nahhasapi20210611231706.azurewebsites.net/statuses/videos/2021-6-11-21-5-5-108-8668c83aeb6b49e3905939b375c9c11d.mp4", CoverPath = "https://nahhasapi20210611231706.azurewebsites.net/statuses/images/2021-6-11-21-5-20-31-14542525338141bbbf215cecf7561b11.png", AdditionDate = DateTime.UtcNow, LastModified = DateTime.UtcNow });
+                modelBuilder.Entity<Image>().HasData(new Image { Id = Guid.NewGuid(), CategoryId = id, ImagePath = "https://nahhasapi20210611231706.azurewebsites.net/statuses/images/2021-6-11-21-5-20-31-14542525338141bbbf215cecf7561b11.png", AdditionDate = DateTime.UtcNow, LastModified = DateTime.UtcNow });
+                modelBuilder.Entity<Quote>().HasData(new Quote { Id = Guid.NewGuid(), CategoryId = id, Content = $"{i}th Quote.", AdditionDate = DateTime.UtcNow, LastModified = DateTime.UtcNow });
             }
 
             base.OnModelCreating(modelBuilder);
