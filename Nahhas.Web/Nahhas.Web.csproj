@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Nahhas.Business\Nahhas.Business.csproj" />
+    <ProjectReference Include="..\Nahhas.Library\Nahhas.Library.csproj" />
   </ItemGroup>
 
 </Project>

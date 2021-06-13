@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Nahhas.Shared.Entities.Base;
-using Nahhas.Shared.Filters.Interfaces;
-using Nahhas.Shared.Helpers.Extensions.Repository;
-using Nahhas.Shared.Repositories.Interfaces;
+using Nahhas.Library.Entities.Interfaces;
+using Nahhas.Library.Filters.Entity.Interfaces;
+using Nahhas.Library.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -12,23 +11,23 @@ namespace Nahhas.API.Controllers.Base
 {
     [Route("api/[controller]")]
     [ApiController]
-    public abstract class ControllerBase<T, Filter> : ControllerBase
-        where T : EntityBase, new()
-        where Filter : IFilter<T>, new()
+    public abstract class ControllerBase<TEntity, Filter> : ControllerBase
+        where TEntity : IEntity, new()
+        where Filter : IFilter<TEntity>, new()
     {
-        private readonly IRepository<T> _repository;
+        private readonly IGenericRepository<TEntity> _repository;
 
-        public ControllerBase(IRepository<T> repository)
+        public ControllerBase(IGenericRepository<TEntity> repository)
         {
             _repository = repository;
         }
 
         [HttpGet]
-        public virtual async Task<ActionResult<IEnumerable<T>>> Get()
+        public virtual async Task<ActionResult<IEnumerable<TEntity>>> Get()
         {
             try
             {
-                return Ok(await _repository.Get());
+                return Ok(await _repository.GetAsync());
             }
             catch
             {
@@ -38,11 +37,11 @@ namespace Nahhas.API.Controllers.Base
         }
 
         [HttpGet("search")]
-        public virtual async Task<ActionResult<IEnumerable<T>>> Get([FromQuery] Filter filter)
+        public virtual async Task<ActionResult<IEnumerable<TEntity>>> Get([FromQuery] Filter filter)
         {
             try
             {
-                return Ok(await _repository.Get(filter));
+                return Ok(await _repository.GetAsync(filter));
             }
             catch
             {
@@ -52,14 +51,14 @@ namespace Nahhas.API.Controllers.Base
         }
 
         [HttpGet("{id:Guid}")]
-        public virtual async Task<ActionResult<T>> Get([FromRoute] Guid id)
+        public virtual async Task<ActionResult<TEntity>> Get([FromRoute] Guid id)
         {
             try
             {
-                var entity = await _repository.Get(id);
+                var entity = await _repository.GetAsync(id);
 
                 return (entity == null) ?
-                    NotFound($"{typeof(T).Name} with Id = {id} not found!") : Ok(entity);
+                    NotFound($"{typeof(TEntity).Name} with Id = {id} not found!") : Ok(entity);
             }
             catch
             {
@@ -73,7 +72,7 @@ namespace Nahhas.API.Controllers.Base
         {
             try
             {
-                return Ok(await _repository.Count(filter));
+                return Ok(await _repository.CountAsync(filter));
             }
             catch
             {
@@ -83,11 +82,11 @@ namespace Nahhas.API.Controllers.Base
         }
 
         [HttpPost]
-        public virtual async Task<ActionResult<T>> Post([FromBody] T entity)
+        public virtual async Task<ActionResult<TEntity>> Post([FromBody] TEntity entity)
         {
             try
             {
-                var added = await _repository.Add(entity);
+                var added = await _repository.AddAsync(entity);
 
                 return CreatedAtAction(nameof(Get), new { id = added.Id }, added);
             }
@@ -99,34 +98,36 @@ namespace Nahhas.API.Controllers.Base
         }
 
         [HttpPut]
-        public virtual async Task<ActionResult<T>> Put([FromBody] T entity)
+        public virtual async Task<ActionResult<TEntity>> Put([FromBody] TEntity entity)
         {
             try
             {
-                return (entity.Id == Guid.Empty) ?
-                    BadRequest("The Id field is required.") :
-                    Ok(await _repository.Update(entity));
+                return entity.Id.Equals(Guid.Empty) ?
+                    BadRequest("The Id field is required for the update process!") :
+                    Ok(await _repository.UpdateAsync(entity));
             }
             catch
             {
-                return (!await _repository.Exists(entity.Id)) ?
-                    NotFound($"{typeof(T).Name} with Id = {entity.Id} not found!") :
-                    StatusCode(StatusCodes.Status500InternalServerError,
-                    "An error occurred while updating data!");
+                return (!await _repository.ExistsAsync(entity.Id)) ?
+                     NotFound($"{typeof(TEntity).Name} with Id = {entity.Id} not found!") :
+                     StatusCode(StatusCodes.Status500InternalServerError,
+                     "An error occurred while updating data!");
             }
         }
 
         [HttpDelete("{id:Guid}")]
-        public virtual async Task<ActionResult<T>> Delete([FromRoute] Guid id)
+        public virtual async Task<ActionResult<TEntity>> Delete([FromRoute] Guid id)
         {
             try
             {
-                return Ok(await _repository.Delete(id));
+                return id.Equals(Guid.Empty) ?
+                   BadRequest("The Id field is required for the delete process!") :
+                   Ok(await _repository.DeleteAsync(id));
             }
             catch
             {
-                return (!await _repository.Exists(id)) ?
-                   NotFound($"{typeof(T).Name} with Id = {id} not found!") :
+                return (!await _repository.ExistsAsync(id)) ?
+                   NotFound($"{typeof(TEntity).Name} with Id = {id} not found!") :
                    StatusCode(StatusCodes.Status500InternalServerError,
                    "An error occurred while deleting data!");
             }

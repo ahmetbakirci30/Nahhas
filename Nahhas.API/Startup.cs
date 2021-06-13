@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Nahhas.Shared.Helpers.Extensions.Startup;
+using Nahhas.Library.Extensions.Startup;
 
 namespace Nahhas.API
 {
@@ -28,15 +28,13 @@ namespace Nahhas.API
                 app.UseDeveloperExceptionPage();
 
             app.UseRouting();
-
             app.UseFileServer();
+            app.SeedDataAsync().Wait();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
-
-            app.SeedDataAsync().Wait();
         }
     }
 }

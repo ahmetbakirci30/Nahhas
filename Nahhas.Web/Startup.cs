@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Nahhas.Business.Repositories;
-using Nahhas.Business.Repositories.Interfaces;
+using Nahhas.Library.Services.Client;
+using Nahhas.Library.Services.Client.Interfaces;
 
 namespace Nahhas.Web
 {
@@ -19,8 +19,7 @@ namespace Nahhas.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped(typeof(INahhasRepositories), typeof(NahhasRepositories));
-
+            services.AddScoped(typeof(INahhasServices), typeof(NahhasServices));
             services.AddControllersWithViews();
         }
 

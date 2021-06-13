@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nahhas.Business.Entities;
-using Nahhas.Business.Repositories.Interfaces;
+using Nahhas.Library.Entities.Statuses;
+using Nahhas.Library.Services.Client.Interfaces;
 using Nahhas.Web.Models;
 using System;
 using System.Linq;
@@ -12,35 +12,35 @@ namespace Nahhas.Web.Controllers
 {
     public class DashboardController : Controller
     {
-        private readonly INahhasRepositories _nahhas;
+        private readonly INahhasServices _nahhas;
 
-        public DashboardController(INahhasRepositories nahhas)
+        public DashboardController(INahhasServices nahhas)
         {
             _nahhas = nahhas;
         }
 
         public async Task<ActionResult> Index()
         {
-            var videos = await _nahhas.VideoRepository.Get();
-            var categories = await _nahhas.CategoryRepository.Get();
+            var videos = await _nahhas.VideoService.GetAsync();
+            var categories = await _nahhas.CategoryService.GetAsync();
 
             foreach (var video in videos)
-                video.Category = categories.SingleOrDefault(c => c.Id == video.CategoryId);
+                video.Category = categories.SingleOrDefault(c => c.Id.Equals(video.CategoryId));
 
             return View(videos);
         }
 
         public async Task<ActionResult> Details(Guid id)
         {
-            var video = await _nahhas.VideoRepository.Get(id);
-            video.Category = await _nahhas.CategoryRepository.Get(video.CategoryId);
+            var video = await _nahhas.VideoService.GetAsync(id);
+            video.Category = await _nahhas.CategoryService.GetAsync(video.CategoryId);
 
             return View(video);
         }
 
         public async Task<ActionResult> Create()
         {
-            var categories = await _nahhas.CategoryRepository.Get();
+            var categories = await _nahhas.CategoryService.GetAsync();
             ViewBag.Categories = new SelectList(categories, "Id", "Name");
             return View();
         }
@@ -54,7 +54,7 @@ namespace Nahhas.Web.Controllers
                 if (!ModelState.IsValid)
                     return RedirectToAction(nameof(Create));
 
-                await _nahhas.VideoRepository.Add(new Video
+                await _nahhas.VideoService.AddAsync(new Video
                 {
                     Active = model.Active,
                     CategoryId = model.CategoryId,
@@ -73,9 +73,9 @@ namespace Nahhas.Web.Controllers
 
         public async Task<ActionResult> Edit(Guid id)
         {
-            ViewBag.Categories = new SelectList(await _nahhas.CategoryRepository.Get(), "Id", "Name");
+            ViewBag.Categories = new SelectList(await _nahhas.CategoryService.GetAsync(), "Id", "Name");
 
-            var video = await _nahhas.VideoRepository.Get(id);
+            var video = await _nahhas.VideoService.GetAsync(id);
 
             return View(new VideoViewModel
             {
@@ -94,7 +94,7 @@ namespace Nahhas.Web.Controllers
         {
             try
             {
-                await _nahhas.VideoRepository.Update(new Video
+                await _nahhas.VideoService.UpdateAsync(new Video
                 {
                     Id = model.Id,
                     Active = model.Active,
@@ -113,7 +113,7 @@ namespace Nahhas.Web.Controllers
         }
 
         public async Task<ActionResult> Delete(Guid id)
-            => View(await _nahhas.VideoRepository.Get(id));
+            => View(await _nahhas.VideoService.GetAsync(id));
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -121,9 +121,9 @@ namespace Nahhas.Web.Controllers
         {
             try
             {
-                await _nahhas.FileRepository.Delete(video.VideoPath);
-                await _nahhas.FileRepository.Delete(video.CoverPath);
-                await _nahhas.VideoRepository.Delete(id);
+                await _nahhas.FileService.DeleteAsync(video.VideoPath);
+                await _nahhas.FileService.DeleteAsync(video.CoverPath);
+                await _nahhas.VideoService.DeleteAsync(id);
 
                 return RedirectToAction(nameof(Index));
             }
@@ -134,9 +134,9 @@ namespace Nahhas.Web.Controllers
         }
 
         private async Task<string> UploadFile(IFormFile file)
-            => await _nahhas.FileRepository.Upload(file);
+            => await _nahhas.FileService.UploadAsync(file);
 
         private async Task<string> UpdateFile(IFormFile file, string path)
-            => (file != null && file.Length > 0) ? await _nahhas.FileRepository.Update(file, path) : path;
+            => (file != null && file.Length > 0) ? await _nahhas.FileService.UpdateAsync(file, path) : path;
     }
 }

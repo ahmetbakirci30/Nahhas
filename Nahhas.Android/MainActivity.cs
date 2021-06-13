@@ -4,7 +4,7 @@ using Android.OS;
 using Android.Runtime;
 using Android.Widget;
 using AndroidX.AppCompat.App;
-using Nahhas.Business.Repositories;
+using Nahhas.Library.Services.Client;
 using Xamarin.Essentials;
 
 namespace Nahhas.Android
@@ -23,8 +23,8 @@ namespace Nahhas.Android
 
         private async void Init()
         {
-            var nahhas = new NahhasRepositories();
-            var quotes = await nahhas.QuoteRepository.Get();
+            var nahhas = new NahhasServices();
+            var quotes = await nahhas.QuoteService.GetAsync();
 
             foreach (var quote in quotes)
                 Toast.MakeText(this, quote.Content, ToastLength.Short).Show();

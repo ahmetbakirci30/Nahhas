@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Nahhas.Business.Repositories.Interfaces;
+using Nahhas.Library.Services.Client.Interfaces;
 using Nahhas.Web.Models;
 using System.Diagnostics;
 using System.IO;
@@ -10,9 +10,9 @@ namespace Nahhas.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly INahhasRepositories _nahhas;
+        private readonly INahhasServices _nahhas;
 
-        public HomeController(INahhasRepositories nahhas)
+        public HomeController(INahhasServices nahhas)
         {
             _nahhas = nahhas;
         }
@@ -20,15 +20,17 @@ namespace Nahhas.Web.Controllers
         public async Task<IActionResult> Index()
             => View(new NahhasStatuses
             {
-                Videos = await _nahhas.VideoRepository.Get(),
-                Images = await _nahhas.ImageRepository.Get(),
-                Quotes = await _nahhas.QuoteRepository.Get(),
+                Videos = await _nahhas.VideoService.GetAsync(),
+                Images = await _nahhas.ImageService.GetAsync(),
+                Quotes = await _nahhas.QuoteService.GetAsync(),
 
-                TotalStatusesCount = (await _nahhas.VideoRepository.Count()) + (await _nahhas.ImageRepository.Count()) + (await _nahhas.QuoteRepository.Count())
+                TotalStatusesCount = (await _nahhas.VideoService.CountAsync()) + 
+                                     (await _nahhas.ImageService.CountAsync()) + 
+                                     (await _nahhas.QuoteService.CountAsync())
             });
 
         public async Task<IActionResult> Download(string path)
-            => File(await _nahhas.FileRepository.Download(path),
+            => File(await _nahhas.FileService.DownloadAsync(path),
                 MediaTypeNames.Application.Octet, Path.GetFileName(path));
 
         public IActionResult Privacy()

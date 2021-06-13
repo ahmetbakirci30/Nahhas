@@ -1,4 +1,4 @@
-﻿using Nahhas.Business.Entities;
+﻿using Nahhas.Library.Entities.Statuses;
 using System.Collections.Generic;
 
 namespace Nahhas.Web.Models

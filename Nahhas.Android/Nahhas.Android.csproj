@@ -105,9 +105,9 @@
     <PackageReference Include="Xamarin.Essentials" Version="1.6.1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Nahhas.Business\Nahhas.Business.csproj">
-      <Project>{b8b872b9-8345-4aa9-91e7-4873c0fc2b83}</Project>
-      <Name>Nahhas.Business</Name>
+    <ProjectReference Include="..\Nahhas.Library\Nahhas.Library.csproj">
+      <Project>{99d7280f-1bcb-49a1-a9a1-3d750d481f23}</Project>
+      <Name>Nahhas.Library</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />

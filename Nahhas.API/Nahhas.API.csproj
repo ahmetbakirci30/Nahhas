@@ -12,11 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Nahhas.Shared\Nahhas.Shared.csproj" />
+    <ProjectReference Include="..\Nahhas.Library\Nahhas.Library.csproj" />
   </ItemGroup>
 
 </Project>
