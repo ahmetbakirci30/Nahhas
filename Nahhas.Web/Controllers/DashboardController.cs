@@ -1,11 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nahhas.Business.Entities;
-using Nahhas.Business.Repositories;
 using Nahhas.Business.Repositories.Interfaces;
 using Nahhas.Web.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -55,19 +54,14 @@ namespace Nahhas.Web.Controllers
                 if (!ModelState.IsValid)
                     return RedirectToAction(nameof(Create));
 
-                var videoPath = await _nahhas.FileRepository.Add(model.VideoFile);
-                var imagePath = await _nahhas.FileRepository.Add(model.CoverFile);
-
-                var video = new Video
+                await _nahhas.VideoRepository.Add(new Video
                 {
                     Active = model.Active,
                     CategoryId = model.CategoryId,
                     Title = model.Title,
-                    VideoPath = videoPath,
-                    CoverPath = imagePath
-                };
-
-                await _nahhas.VideoRepository.Add(video);
+                    VideoPath = await UploadFile(model.VideoFile),
+                    CoverPath = await UploadFile(model.CoverFile)
+                });
 
                 return RedirectToAction(nameof(Index));
             }
@@ -79,9 +73,9 @@ namespace Nahhas.Web.Controllers
 
         public async Task<ActionResult> Edit(Guid id)
         {
+            ViewBag.Categories = new SelectList(await _nahhas.CategoryRepository.Get(), "Id", "Name");
+
             var video = await _nahhas.VideoRepository.Get(id);
-            var categories = await _nahhas.CategoryRepository.Get();
-            ViewBag.Categories = new SelectList(categories, "Id", "Name");
 
             return View(new VideoViewModel
             {
@@ -100,23 +94,15 @@ namespace Nahhas.Web.Controllers
         {
             try
             {
-                var videoPath = (model.VideoFile != null && model.VideoFile.Length > 0) ?
-                    await _nahhas.FileRepository.Update(model.VideoFile, model.VideoPath) : model.VideoPath;
-
-                var coverPath = (model.CoverFile != null && model.CoverFile.Length > 0) ?
-                    await _nahhas.FileRepository.Update(model.CoverFile, model.CoverPath) : model.CoverPath;
-
-                var video = new Video
+                await _nahhas.VideoRepository.Update(new Video
                 {
                     Id = model.Id,
                     Active = model.Active,
                     CategoryId = model.CategoryId,
                     Title = model.Title,
-                    VideoPath = videoPath,
-                    CoverPath = coverPath
-                };
-
-                await _nahhas.VideoRepository.Update(video);
+                    VideoPath = await UpdateFile(model.VideoFile, model.VideoPath),
+                    CoverPath = await UpdateFile(model.CoverFile, model.CoverPath)
+                });
 
                 return RedirectToAction(nameof(Index));
             }
@@ -146,5 +132,11 @@ namespace Nahhas.Web.Controllers
                 return RedirectToAction(nameof(Delete));
             }
         }
+
+        private async Task<string> UploadFile(IFormFile file)
+            => await _nahhas.FileRepository.Upload(file);
+
+        private async Task<string> UpdateFile(IFormFile file, string path)
+            => (file != null && file.Length > 0) ? await _nahhas.FileRepository.Update(file, path) : path;
     }
 }

@@ -28,7 +28,7 @@ namespace Nahhas.Web.Controllers
             });
 
         public async Task<IActionResult> Download(string path)
-            => File(await _nahhas.FileRepository.Get(path),
+            => File(await _nahhas.FileRepository.Download(path),
                 MediaTypeNames.Application.Octet, Path.GetFileName(path));
 
         public IActionResult Privacy()

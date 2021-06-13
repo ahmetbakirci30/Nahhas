@@ -18,13 +18,13 @@ namespace Nahhas.Business.Services.File
             _requestUri = requestUri;
         }
 
-        public async Task<byte[]> Get(string path)
+        public async Task<byte[]> Download(string path)
         {
             _service.Client.DefaultRequestHeaders.Add("path", path);
             return await _service.Client.GetByteArrayAsync(_requestUri);
         }
 
-        public async Task<string> Add(IFormFile file)
+        public async Task<string> Upload(IFormFile file)
         {
             using var response = await _service.Client.PostAsync(_requestUri, CofigureFileToSend(file));
             return await response.Content.ReadAsStringAsync();
